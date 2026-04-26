@@ -86,46 +86,6 @@ pnpm type-check       # tsc --noEmit
 - **No Redux / global state** — data flows top-down through RSC props; client components only receive serialisable data.
 - **Tailwind for layout/chrome** — `react-notion-x` owns Notion content styles; Tailwind handles everything else.
 
-## Task-oriented workflow
-
-Work is organized in phases. Create tasks with `TaskCreate` before starting each phase, update them to `in_progress` while working, and mark `completed` when done. Each phase should be a single PR except Phase 1 (scaffolding).
-
-### Phase 1 — Scaffolding
-- [ ] Initialize Next.js 14 + TypeScript + Tailwind with pnpm
-- [ ] Configure `tsconfig.json`, `next.config.js`, ESLint, Prettier
-- [ ] Set up `site.config.ts` skeleton
-- [ ] Add `.env.example`
-
-### Phase 2 — Notion integration
-- [ ] Install `notion-client`, `notion-types`, `notion-utils`, `react-notion-x`
-- [ ] Implement `lib/notion.ts` (getPage, getAllPages)
-- [ ] Implement `lib/map-page-url.ts`
-- [ ] Add `app/api/notion/[...slug]/route.ts` (asset proxy)
-
-### Phase 3 — Core pages
-- [ ] `app/page.tsx` — home page listing posts from root Notion page
-- [ ] `app/[slug]/page.tsx` — individual post with ISR
-- [ ] `components/NotionPage.tsx` — NotionRenderer wrapper
-
-### Phase 4 — Styling
-- [ ] `styles/globals.css` — Tailwind base
-- [ ] `styles/notion.css` — Notion content overrides
-- [ ] Site header / footer components
-
-### Phase 5 — RSS feed
-- [ ] `app/api/rss/route.ts` — generates RSS XML from all Notion pages
-
-### Phase 6 — Performance & polish
-- [ ] Preview image generation with `lqip-modern`
-- [ ] `next/image` for all images
-- [ ] Open Graph / social meta tags
-- [ ] Optional Redis caching
-
-### Phase 7 — Deployment
-- [ ] Vercel project setup
-- [ ] Environment variables in Vercel
-- [ ] Custom domain
-
 ## Code conventions
 
 - **No default exports** except Next.js pages/layouts (required by the framework).
@@ -133,3 +93,13 @@ Work is organized in phases. Create tasks with `TaskCreate` before starting each
 - **No `any`** — use `unknown` and narrow it.
 - Comments only when the **why** is non-obvious.
 - Keep Notion-specific logic in `lib/`; React components in `components/`.
+
+## Branch naming
+- Features: feature/<issue-number>-short-description
+- Bugs: fix/<issue-number>-short-description
+
+## Workflow rules
+- Always create a branch from main for each issue
+- Run tests before creating a PR
+- PR title must reference the issue: "Fix #123: description"
+- Never push directly to main
