@@ -1,6 +1,6 @@
 import { getAllPages } from '@/lib/notion'
 import siteConfig from '@/site.config'
-import Link from 'next/link'
+import PostList from '@/components/PostList'
 
 export const revalidate = 60
 
@@ -23,29 +23,7 @@ export default async function HomePage() {
       {pages.length === 0 ? (
         <p className="text-zinc-400 text-sm">No posts yet.</p>
       ) : (
-        <ul className="divide-y divide-zinc-100">
-          {pages.map((page) => (
-            <li key={page.id} className="py-6">
-              <Link href={`/${page.slug}`} className="group flex flex-col gap-1">
-                <span className="text-base font-medium text-zinc-900 group-hover:text-blue-600 transition-colors">
-                  {page.title}
-                </span>
-                {page.description && (
-                  <span className="text-sm text-zinc-500 line-clamp-2">{page.description}</span>
-                )}
-                {page.date && (
-                  <time dateTime={page.date} className="text-xs text-zinc-400 mt-1">
-                    {new Date(page.date).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </time>
-                )}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <PostList pages={pages} />
       )}
     </main>
   )

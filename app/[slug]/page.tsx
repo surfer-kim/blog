@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: page.description ?? undefined,
       url: pageUrl,
       type: 'article',
-      ...(page.date ? { publishedTime: page.date } : {}),
+      ...(page.published ? { publishedTime: `${page.published}T00:00:00Z` } : {}),
       ...(ogImage ? { images: [{ url: ogImage }] } : {}),
     },
     twitter: {
