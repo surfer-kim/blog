@@ -1,0 +1,24 @@
+name: Claude Code - Work on Issue
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  claude:
+    if: github.event.label.name == 'claude'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: "--model claude-sonnet-4-6"
+          prompt: |
+            Read issue #${{ github.event.issue.number }}.
+            1. Create a branch named feature/${{ github.event.issue.number }}-$(echo "${{ github.event.issue.title }}" | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
+            2. Implement the changes described in the issue
+            3. Run the tests
+            4. Create a PR linked to issue #${{ github.event.issue.number }}
