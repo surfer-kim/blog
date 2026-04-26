@@ -22,10 +22,10 @@ export function mapPageUrl(recordMap: ExtendedRecordMap) {
 // Rewrites Notion-hosted asset URLs to go through our local proxy,
 // avoiding CORS errors and broken hotlinks after Notion URL expiry.
 export function mapNotionImageUrl(
-  url: string,
+  url: string | undefined,
   block: { id: string }
 ): string {
-  if (!url) return url
+  if (!url) return ''
   if (url.startsWith('data:') || url.startsWith('/')) return url
   return `/api/notion/image?url=${encodeURIComponent(url)}&blockId=${block.id}`
 }

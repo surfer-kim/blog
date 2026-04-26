@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
       // Notion-hosted images (S3)
       { protocol: "https", hostname: "s3.us-west-2.amazonaws.com" },
       { protocol: "https", hostname: "s3-us-west-2.amazonaws.com" },
+      // Unsplash (commonly used as Notion page covers)
+      { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
 };

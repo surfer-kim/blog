@@ -1,0 +1,131 @@
+/*
+ * Overrides for react-notion-x rendered content.
+ * Targets classes emitted by NotionRenderer — do not use these outside of Notion pages.
+ * Source vars are defined in react-notion-x/src/styles.css.
+ */
+
+/* Use our Geist font instead of the default system stack */
+:root {
+  --notion-font: var(--font-geist-sans), ui-sans-serif, system-serif, sans-serif;
+}
+
+/* Constrain page to a readable column and remove built-in horizontal padding */
+.notion-page {
+  width: 100%;
+  max-width: var(--notion-max-width);
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* The full-page wrapper adds its own padding — reset it so our layout controls spacing */
+.notion-full-page {
+  padding-top: 0;
+}
+
+/* Hide the built-in Notion breadcrumb / top bar — we have our own header */
+.notion-header {
+  display: none !important;
+}
+
+/* Page title: increase weight and tighten line-height */
+.notion-title {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 1.5rem;
+}
+
+/* Body text: slightly larger and more readable */
+.notion-text {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--fg-color);
+}
+
+/* Inline code */
+.notion-inline-code {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.875em;
+  background: var(--bg-color-0);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+/* Code blocks */
+.notion-code {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.875rem;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+/* Headings */
+.notion-h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.notion-h2 {
+  font-size: 1.375rem;
+  font-weight: 600;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.notion-h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Links */
+.notion-link {
+  color: var(--notion-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.notion-link:hover {
+  opacity: 0.75;
+}
+
+/* Callout blocks */
+.notion-callout {
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+/* Divider */
+.notion-hr {
+  border-color: var(--fg-color-1);
+  margin: 2rem 0;
+}
+
+/* Images: rounded corners and contained width */
+.notion-image-caption-wrapper img,
+.notion-asset-wrapper img {
+  border-radius: 8px;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Quote block */
+.notion-quote {
+  border-left: 3px solid var(--fg-color-1);
+  padding-left: 1rem;
+  color: var(--fg-color-3);
+  font-style: italic;
+}
+
+/* Table of contents */
+.notion-table-of-contents-item {
+  font-size: 0.875rem;
+}
+
+/* Hide the page cover spacer when there is no cover */
+.notion-page-no-cover .notion-page-content {
+  padding-top: 1rem;
+}

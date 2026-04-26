@@ -1,3 +1,5 @@
+import Keyv from '@keyvhq/core'
+import KeyvRedis from '@keyvhq/redis'
 import { NotionAPI } from 'notion-client'
 import type {
   Block,
@@ -17,6 +19,19 @@ if (process.env.NOTION_ACTIVE_USER) notionOpts.activeUser = process.env.NOTION_A
 
 export const notion = new NotionAPI(notionOpts)
 
+// Optional Redis cache — only active when REDIS_HOST is set.
+// Reduces Notion API calls by caching RecordMaps for the ISR window.
+const cache: Keyv<ExtendedRecordMap> | null =
+  process.env.REDIS_HOST
+    ? new Keyv<ExtendedRecordMap>({
+        store: new KeyvRedis(
+          `redis://${process.env.REDIS_PASSWORD ? `:${process.env.REDIS_PASSWORD}@` : ''}${process.env.REDIS_HOST}`
+        ),
+        ttl: (siteConfig.revalidateSeconds ?? 60) * 1000,
+        namespace: 'notion',
+      })
+    : null
+
 export type PageMeta = {
   id: string           // Notion page ID (no dashes)
   title: string
@@ -26,9 +41,20 @@ export type PageMeta = {
   cover: string | null
 }
 
-// Fetch a single Notion page's RecordMap
+// Fetch a single Notion page's RecordMap, with optional Redis caching
 export async function getPage(pageId: string): Promise<ExtendedRecordMap> {
-  return notion.getPage(pageId)
+  if (cache) {
+    const cached = await cache.get(pageId)
+    if (cached) return cached
+  }
+
+  const recordMap = await notion.getPage(pageId)
+
+  if (cache) {
+    await cache.set(pageId, recordMap)
+  }
+
+  return recordMap
 }
 
 // Fetch all child pages of the root Notion page and return their metadata

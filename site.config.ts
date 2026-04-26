@@ -21,6 +21,8 @@ export type SiteConfig = {
     github?: string
     linkedin?: string
     email?: string
+    linktree?: string
+    youtube?: string
   }
 
   // Optional analytics
@@ -35,12 +37,17 @@ export type SiteConfig = {
 }
 
 const config: SiteConfig = {
-  rootNotionPageId: '', // TODO: set your Notion page ID
-  name: 'Blog',
-  domain: 'localhost:3000',
-  author: '',
+  rootNotionPageId: '1e2e26538db480f48517d027c4c79b3c',
+  name: 'surfer-kim',
+  domain: 'https://surfer-kim.vercel.app',
+  author: 'Jason Kim',
   description: '',
-  social: {},
+  social: {
+    github: "github.com/surfer-kim",
+    linkedin: "linkedin.com/in/surfer-kim",
+    linktree: "linktr.ee/surfer_kim",
+    youtube: "youtube.com/@surfer-kim"
+  },
   pageSize: 10,
   revalidateSeconds: 60,
 }

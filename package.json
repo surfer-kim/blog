@@ -12,10 +12,14 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@keyvhq/core": "^2.1.15",
+    "@keyvhq/redis": "^2.1.17",
+    "lqip-modern": "^2.2.1",
     "next": "16.2.4",
     "notion-client": "^7.10.0",
     "notion-types": "^7.10.0",
     "notion-utils": "^7.10.0",
+    "p-map": "^7.0.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-notion-x": "^7.10.0"
