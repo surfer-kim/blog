@@ -47,10 +47,10 @@ const config: SiteConfig = {
   author: 'Jason Kim',
   description: '',
   social: {
-    github: "github.com/surfer-kim",
-    linkedin: "linkedin.com/in/surfer-kim",
-    linktree: "linktr.ee/surfer_kim",
-    youtube: "youtube.com/@surfer-kim"
+    github: "surfer-kim",
+    linkedin: "surfer-kim",
+    linktree: "surfer_kim",
+    youtube: "@surfer-kim"
   },
   pageSize: 10,
   revalidateSeconds: 60,
