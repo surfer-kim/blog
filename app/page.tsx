@@ -1,6 +1,6 @@
+import PostList from '@/components/PostList'
 import { getAllPages } from '@/lib/notion'
 import siteConfig from '@/site.config'
-import PostList from '@/components/PostList'
 
 export const revalidate = 60
 
@@ -19,7 +19,7 @@ export default async function HomePage() {
   const pages = await getAllPages()
 
   return (
-    <main className="max-w-2xl mx-auto px-6 py-16">
+    <main className="max-w-2xl mx-auto px-6 py-10">
       {pages.length === 0 ? (
         <p className="text-zinc-400 text-sm">No posts yet.</p>
       ) : (
