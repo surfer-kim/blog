@@ -1,17 +1,31 @@
 import { type NextRequest, NextResponse } from 'next/server'
+import { notion } from '@/lib/notion'
 
 // Proxies Notion-hosted images to avoid CORS issues and expired S3 signed URLs.
 // react-notion-x calls mapNotionImageUrl() which rewrites image src to this route.
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const url = req.nextUrl.searchParams.get('url')
+  const blockId = req.nextUrl.searchParams.get('blockId') ?? ''
 
   if (!url) {
     return new NextResponse('Missing url param', { status: 400 })
   }
 
+  // Notion stores uploaded files as "attachment:<uuid>:<filename>" — not a real URL.
+  // Resolve to a signed S3 URL before fetching.
+  let resolvedUrl = url
+  if (url.startsWith('attachment:')) {
+    const result = await notion.getSignedFileUrls([
+      { url, permissionRecord: { table: 'block', id: blockId } },
+    ])
+    const signed = result.signedUrls[0]
+    if (!signed) return new NextResponse('Could not resolve attachment URL', { status: 404 })
+    resolvedUrl = signed
+  }
+
   let parsedUrl: URL
   try {
-    parsedUrl = new URL(url)
+    parsedUrl = new URL(resolvedUrl)
   } catch {
     return new NextResponse('Invalid url param', { status: 400 })
   }
@@ -31,7 +45,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     return new NextResponse('Disallowed host', { status: 403 })
   }
 
-  const upstream = await fetch(url, {
+  const upstream = await fetch(resolvedUrl, {
     headers: { 'User-Agent': 'Mozilla/5.0' },
   })
 

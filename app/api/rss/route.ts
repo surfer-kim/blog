@@ -10,7 +10,7 @@ export async function GET(): Promise<Response> {
   const items = pages
     .map((page) => {
       const url = `${baseUrl}/${page.slug}`
-      const pubDate = page.date ? new Date(page.date).toUTCString() : ''
+      const pubDate = page.published ? new Date(`${page.published}T00:00:00Z`).toUTCString() : ''
 
       return `
     <item>

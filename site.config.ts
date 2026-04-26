@@ -3,6 +3,9 @@ export type SiteConfig = {
   // e.g. https://notion.so/My-Blog-1234abcd1234abcd → "1234abcd1234abcd"
   rootNotionPageId: string
 
+  // The root Notion page ID for the projects database
+  projectsNotionPageId?: string
+
   // Optional: improves API performance when set
   rootNotionSpaceId?: string
 
@@ -38,6 +41,7 @@ export type SiteConfig = {
 
 const config: SiteConfig = {
   rootNotionPageId: '1e2e26538db480f48517d027c4c79b3c',
+  projectsNotionPageId: '226e26538db480569adcf98b54a4b3fb',
   name: 'surfer-kim',
   domain: 'https://surfer-kim.vercel.app',
   author: 'Jason Kim',

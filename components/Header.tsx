@@ -1,8 +1,13 @@
 import siteConfig from '@/site.config'
 import Link from 'next/link'
 
+const NAV_LINKS = [
+  { label: 'Blog', href: '/' },
+  { label: 'Projects', href: '/projects' },
+]
+
 export default function Header() {
-  const { name, social } = siteConfig
+  const { name } = siteConfig
 
   return (
     <header className="border-b border-zinc-100">
@@ -13,6 +18,17 @@ export default function Header() {
         >
           {name}.
         </Link>
+        <nav className="flex items-center gap-6">
+          {NAV_LINKS.map(({ label, href }) => (
+            <Link
+              key={href}
+              href={href}
+              className="text-sm text-zinc-500 hover:text-zinc-900 transition-colors"
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
       </div>
     </header>
   )
