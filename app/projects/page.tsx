@@ -1,4 +1,5 @@
 import { getAllProjects } from '@/lib/notion'
+import { mapNotionImageUrl } from '@/lib/map-page-url'
 import siteConfig from '@/site.config'
 import type { Metadata } from 'next'
 import Image from 'next/image'
@@ -47,10 +48,13 @@ function tagColor(tag: string): string {
 }
 
 function coverSrc(cover: string, blockId: string): string {
-  // Signed S3 URLs and external HTTPS covers can be used directly by next/image.
-  // attachment:// and other URLs go through the proxy which resolves them server-side.
-  if (cover.startsWith('https://') || cover.startsWith('http://')) return cover
-  return `/api/notion/image?url=${encodeURIComponent(cover)}&blockId=${blockId}`
+  // Mirror the NotionNextImage pattern: always proxy via mapNotionImageUrl, then
+  // unwrap HTTPS URLs so next/image fetches them directly via remotePatterns.
+  // attachment:// and other non-HTTP URLs stay proxied for server-side resolution.
+  const proxied = mapNotionImageUrl(cover, { id: blockId })
+  if (!proxied.startsWith('/api/notion/image?')) return proxied
+  const decoded = new URLSearchParams(proxied.slice(proxied.indexOf('?') + 1)).get('url') ?? proxied
+  return decoded.startsWith('http://') || decoded.startsWith('https://') ? decoded : proxied
 }
 
 export default async function ProjectsPage() {
