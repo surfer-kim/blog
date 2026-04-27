@@ -46,11 +46,10 @@ function tagColor(tag: string): string {
   return TAG_COLORS[hash % TAG_COLORS.length]!
 }
 
-function coverSrc(cover: string, blockId: string): string | null {
-  // Signed S3 URLs from resolved attachments are already full HTTPS URLs — use directly.
-  // Unresolved attachment:// URLs can't be fetched; skip them (show placeholder).
-  if (cover.startsWith('attachment:')) return null
-  if (cover.startsWith('https://')) return cover
+function coverSrc(cover: string, blockId: string): string {
+  // Signed S3 URLs and external HTTPS covers can be used directly by next/image.
+  // attachment:// and other URLs go through the proxy which resolves them server-side.
+  if (cover.startsWith('https://') || cover.startsWith('http://')) return cover
   return `/api/notion/image?url=${encodeURIComponent(cover)}&blockId=${blockId}`
 }
 
@@ -74,21 +73,18 @@ export default async function ProjectsPage() {
                 >
                   {/* Cover */}
                   <div className="relative w-full aspect-video bg-zinc-50">
-                    {(() => {
-                      const src = project.cover ? coverSrc(project.cover, project.id) : null
-                      return src ? (
-                        <Image
-                          src={src}
-                          alt={project.title}
-                          fill
-                          className="object-cover"
-                          sizes="(min-width: 640px) 50vw, 100vw"
-                          priority={i < 2}
-                        />
-                      ) : (
-                        <div className="absolute inset-0 bg-zinc-100" />
-                      )
-                    })()}
+                    {project.cover ? (
+                      <Image
+                        src={coverSrc(project.cover, project.id)}
+                        alt={project.title}
+                        fill
+                        className="object-cover"
+                        sizes="(min-width: 640px) 50vw, 100vw"
+                        priority={i < 2}
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-zinc-100" />
+                    )}
                   </div>
 
                   {/* Content */}
