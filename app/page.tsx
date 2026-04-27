@@ -19,7 +19,7 @@ export default async function HomePage() {
   const pages = await getAllPages()
 
   return (
-    <main className="max-w-2xl mx-auto px-6 py-10">
+    <main className="max-w-2xl mx-auto px-6 py-6">
       {pages.length === 0 ? (
         <p className="text-zinc-400 text-sm">No posts yet.</p>
       ) : (

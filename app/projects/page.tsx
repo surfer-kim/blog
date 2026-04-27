@@ -58,7 +58,7 @@ export default async function ProjectsPage() {
   const projects = await getAllProjects()
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-16">
+    <main className="max-w-4xl mx-auto px-6 py-10">
       <h1 className="text-2xl font-semibold text-zinc-900 mb-10">Projects</h1>
       {projects.length === 0 ? (
         <p className="text-zinc-400 text-sm">No projects yet.</p>
@@ -68,75 +68,75 @@ export default async function ProjectsPage() {
             const period = formatPeriod(project.start, project.end)
             return (
               <li key={project.id}>
-              <Link
-                href={`/projects/${project.slug}`}
-                className="flex flex-col rounded-xl border border-zinc-100 overflow-hidden hover:border-zinc-300 transition-colors h-full"
-              >
-                {/* Cover */}
-                <div className="relative w-full aspect-video bg-zinc-50">
-                  {(() => {
-                    const src = project.cover ? coverSrc(project.cover, project.id) : null
-                    return src ? (
-                      <Image
-                        src={src}
-                        alt={project.title}
-                        fill
-                        className="object-cover"
-                        sizes="(min-width: 640px) 50vw, 100vw"
-                        priority={i < 2}
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-zinc-100" />
-                    )
-                  })()}
-                </div>
-
-                {/* Content */}
-                <div className="flex flex-col gap-2 p-5 flex-1">
-                  <div className="flex items-start justify-between gap-3">
-                    <span className="text-base font-medium text-zinc-900 leading-snug">
-                      {project.title}
-                    </span>
-                    <div className="flex gap-3 shrink-0">
-                      {project.url && (
-                        <a
-                          href={project.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-zinc-400 hover:text-zinc-900 transition-colors"
-                        >
-                          Live ↗
-                        </a>
-                      )}
-                    </div>
+                <Link
+                  href={`/projects/${project.slug}`}
+                  className="flex flex-col rounded-xl border border-zinc-100 overflow-hidden hover:border-zinc-300 transition-colors h-full"
+                >
+                  {/* Cover */}
+                  <div className="relative w-full aspect-video bg-zinc-50">
+                    {(() => {
+                      const src = project.cover ? coverSrc(project.cover, project.id) : null
+                      return src ? (
+                        <Image
+                          src={src}
+                          alt={project.title}
+                          fill
+                          className="object-cover"
+                          sizes="(min-width: 640px) 50vw, 100vw"
+                          priority={i < 2}
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-zinc-100" />
+                      )
+                    })()}
                   </div>
 
-                  <div className="flex flex-col gap-1">
-                    {period && (
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-xs text-zinc-500">{period}</span>
+                  {/* Content */}
+                  <div className="flex flex-col gap-2 p-5 flex-1">
+                    <div className="flex items-start justify-between gap-3">
+                      <span className="text-base font-medium text-zinc-900 leading-snug">
+                        {project.title}
+                      </span>
+                      <div className="flex gap-3 shrink-0">
+                        {project.url && (
+                          <a
+                            href={project.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-zinc-400 hover:text-zinc-900 transition-colors"
+                          >
+                            Live ↗
+                          </a>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      {period && (
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs text-zinc-500">{period}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {project.description && (
+                      <p className="text-sm text-zinc-500 line-clamp-3 mt-1">{project.description}</p>
+                    )}
+
+                    {project.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-auto pt-3">
+                        {project.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className={`text-xs px-2 py-0.5 rounded-full ${tagColor(tag)}`}
+                          >
+                            {tag}
+                          </span>
+                        ))}
                       </div>
                     )}
                   </div>
-
-                  {project.description && (
-                    <p className="text-sm text-zinc-500 line-clamp-3 mt-1">{project.description}</p>
-                  )}
-
-                  {project.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mt-auto pt-3">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className={`text-xs px-2 py-0.5 rounded-full ${tagColor(tag)}`}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </Link>
+                </Link>
               </li>
             )
           })}

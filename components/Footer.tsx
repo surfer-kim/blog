@@ -6,7 +6,7 @@ export default function Footer() {
   const socialLinks = [
     {
       name: "youtube",
-      href: `https://${siteConfig.social?.youtube}`,
+      href: `https://youtube.com/${siteConfig.social?.youtube}`,
       title: "YouTube",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6">
@@ -19,7 +19,7 @@ export default function Footer() {
     },
     {
       name: "linkedin",
-      href: `https://${siteConfig.social?.linkedin}`,
+      href: `https://linkedin.com/in/${siteConfig.social?.linkedin}`,
       title: "LinkedIn",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6">
@@ -32,7 +32,7 @@ export default function Footer() {
     },
     {
       name: "github",
-      href: `https://${siteConfig.social?.github}`,
+      href: `https://github.com/${siteConfig.social?.github}`,
       title: "GitHub",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6">
@@ -49,7 +49,7 @@ export default function Footer() {
     },
     {
       name: "linktree",
-      href: `https://${siteConfig.social?.linktree}`,
+      href: `https://linktr.ee/${siteConfig.social?.linktree}`,
       title: "Linktree",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6">
