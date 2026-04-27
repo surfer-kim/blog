@@ -26,11 +26,14 @@ function NotionNextImage({
   style,
   ...rest
 }: ComponentProps<typeof NextImage>) {
-  // Unwrap proxy URL → original Notion URL so next/image uses remotePatterns directly
-  const resolvedSrc =
-    typeof src === 'string' && src.startsWith('/api/notion/image?')
-      ? (new URLSearchParams(src.slice(src.indexOf('?') + 1)).get('url') ?? src)
-      : src
+  // Unwrap proxy URL → original Notion URL so next/image uses remotePatterns directly.
+  // Skip unwrapping for attachment:// URLs — next/image cannot handle that protocol,
+  // so they must stay proxied (localPatterns covers /api/notion/image).
+  const resolvedSrc = (() => {
+    if (typeof src !== 'string' || !src.startsWith('/api/notion/image?')) return src
+    const decoded = new URLSearchParams(src.slice(src.indexOf('?') + 1)).get('url') ?? src
+    return decoded.startsWith('http://') || decoded.startsWith('https://') ? decoded : src
+  })()
 
   const hasDimensions = width != null && height != null
   const useFill = fill != null ? fill : !hasDimensions
