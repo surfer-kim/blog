@@ -1,4 +1,5 @@
 import { getAllProjects } from '@/lib/notion'
+import { mapNotionImageUrl } from '@/lib/map-page-url'
 import siteConfig from '@/site.config'
 import type { Metadata } from 'next'
 import Image from 'next/image'
@@ -46,12 +47,14 @@ function tagColor(tag: string): string {
   return TAG_COLORS[hash % TAG_COLORS.length]!
 }
 
-function coverSrc(cover: string, blockId: string): string | null {
-  // Signed S3 URLs from resolved attachments are already full HTTPS URLs — use directly.
-  // Unresolved attachment:// URLs can't be fetched; skip them (show placeholder).
-  if (cover.startsWith('attachment:')) return null
-  if (cover.startsWith('https://')) return cover
-  return `/api/notion/image?url=${encodeURIComponent(cover)}&blockId=${blockId}`
+function coverSrc(cover: string, blockId: string): string {
+  // Mirror the NotionNextImage pattern: always proxy via mapNotionImageUrl, then
+  // unwrap HTTPS URLs so next/image fetches them directly via remotePatterns.
+  // attachment:// and other non-HTTP URLs stay proxied for server-side resolution.
+  const proxied = mapNotionImageUrl(cover, { id: blockId })
+  if (!proxied.startsWith('/api/notion/image?')) return proxied
+  const decoded = new URLSearchParams(proxied.slice(proxied.indexOf('?') + 1)).get('url') ?? proxied
+  return decoded.startsWith('http://') || decoded.startsWith('https://') ? decoded : proxied
 }
 
 export default async function ProjectsPage() {
@@ -74,21 +77,18 @@ export default async function ProjectsPage() {
                 >
                   {/* Cover */}
                   <div className="relative w-full aspect-video bg-zinc-50">
-                    {(() => {
-                      const src = project.cover ? coverSrc(project.cover, project.id) : null
-                      return src ? (
-                        <Image
-                          src={src}
-                          alt={project.title}
-                          fill
-                          className="object-cover"
-                          sizes="(min-width: 640px) 50vw, 100vw"
-                          priority={i < 2}
-                        />
-                      ) : (
-                        <div className="absolute inset-0 bg-zinc-100" />
-                      )
-                    })()}
+                    {project.cover ? (
+                      <Image
+                        src={coverSrc(project.cover, project.id)}
+                        alt={project.title}
+                        fill
+                        className="object-cover"
+                        sizes="(min-width: 640px) 50vw, 100vw"
+                        priority={i < 2}
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-zinc-100" />
+                    )}
                   </div>
 
                   {/* Content */}

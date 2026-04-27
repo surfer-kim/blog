@@ -100,7 +100,13 @@ export async function getAllPages(): Promise<PageMeta[]> {
     const featured = readCheckbox('Featured', block, recordMap)
     const published = tsToDateStr(getPageProperty<number>('Published', block, recordMap))
     const description = getPageProperty<string>('Description', block, recordMap) ?? null
-    const cover = block.format?.page_cover ?? null
+    const blockNodashId = uuidToId(block.id)
+    const rawCover = block.format?.page_cover ?? null
+    // Resolve attachment:// covers to signed S3 URLs the same way getAllProjects() does
+    const cover =
+      typeof rawCover === 'string'
+        ? (recordMap.signed_urls?.[blockNodashId] ?? rawCover)
+        : null
     const rawTags = getPageProperty<unknown>('Tags', block, recordMap)
     const tags = Array.isArray(rawTags)
       ? (rawTags as string[]).map((t) => t.trim()).filter(Boolean)
@@ -109,7 +115,7 @@ export async function getAllPages(): Promise<PageMeta[]> {
         : []
 
     pages.push({
-      id: uuidToId(block.id),
+      id: blockNodashId,
       slug,
       title,
       description,

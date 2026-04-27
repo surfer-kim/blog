@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server'
+import { idToUuid } from 'notion-utils'
 import { notion } from '@/lib/notion'
 
 // Proxies Notion-hosted images to avoid CORS issues and expired S3 signed URLs.
@@ -13,10 +14,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   // Notion stores uploaded files as "attachment:<uuid>:<filename>" — not a real URL.
   // Resolve to a signed S3 URL before fetching.
+  // Notion's API requires UUID format (with dashes); callers may pass no-dash IDs.
   let resolvedUrl = url
   if (url.startsWith('attachment:')) {
     const result = await notion.getSignedFileUrls([
-      { url, permissionRecord: { table: 'block', id: blockId } },
+      { url, permissionRecord: { table: 'block', id: idToUuid(blockId) } },
     ])
     const signed = result.signedUrls[0]
     if (!signed) return new NextResponse('Could not resolve attachment URL', { status: 404 })
