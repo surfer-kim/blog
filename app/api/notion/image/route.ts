@@ -15,10 +15,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // Notion stores uploaded files as "attachment:<uuid>:<filename>" — not a real URL.
   // Resolve to a signed S3 URL before fetching.
   // Notion's API requires UUID format (with dashes); callers may pass no-dash IDs.
+  // idToUuid corrupts IDs that already contain dashes, so only convert when needed.
   let resolvedUrl = url
   if (url.startsWith('attachment:')) {
+    const normalizedBlockId = blockId.includes('-') ? blockId : idToUuid(blockId)
     const result = await notion.getSignedFileUrls([
-      { url, permissionRecord: { table: 'block', id: idToUuid(blockId) } },
+      { url, permissionRecord: { table: 'block', id: normalizedBlockId } },
     ])
     const signed = result.signedUrls[0]
     if (!signed) return new NextResponse('Could not resolve attachment URL', { status: 404 })
